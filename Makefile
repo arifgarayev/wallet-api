@@ -7,6 +7,7 @@ else
 endif
 
 SETTINGS_FILENAME = pyproject.toml
+COMPOSE_FILENAME = docker-compose.yml
 
 enable-pre-commit-hooks:
 	${PYTHON} -m pre_commit install
@@ -25,3 +26,7 @@ lint:
 secure:
 	${PYTHON} -m bandit -r [TODO: ADD PATHs] --config ${SETTINGS_FILENAME}
 
+run-build:
+	docker-compose -f ${COMPOSE_FILENAME} down
+	docker-compose -f ${COMPOSE_FILENAME} build
+	docker-compose -f ${COMPOSE_FILENAME} up
