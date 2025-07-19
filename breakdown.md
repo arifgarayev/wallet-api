@@ -11,3 +11,15 @@
     2.3 Wallet balance should never be the negative
     2.4 Transaction amount should not exceed wallet's balance amount
 
+3. API design - CRUD
+   1. Create Wallet (return id) - POST
+   2. Read Wallet (details) - GET
+   3. Read Wallets (list + pagination + sorting) - GET
+   4. Update Wallet (by id) - PATCH
+   5. Delete Wallet (by id) - DELETE
+   6. Create Transaction (input wallet id) - POST
+   7. Read Transaction (detail of one transaction by transaction ID) - GET
+   8. Read Transactions (by wallet id) - GET
+   9. Update Transaction (by transaction ID) - PATCH
+   10. Delete Transaction (by transaction ID) - DELETE
+4.  
