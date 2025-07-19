@@ -22,4 +22,3 @@
    8. Read Transactions (by wallet id) - GET
    9. Update Transaction (by transaction ID) - PATCH
    10. Delete Transaction (by transaction ID) - DELETE
-4.  
