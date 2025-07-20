@@ -17,7 +17,14 @@ dependencies = [
     "bandit (>=1.8.6,<2.0.0)",
     "pre-commit (>=4.2.0,<5.0.0)",
     "pytest (>=8.4.1,<9.0.0)",
-    "pylint (>=3.3.7,<4.0.0)"
+    "pylint (>=3.3.7,<4.0.0)",
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "django (>=5.2.4,<6.0.0)",
+    "gunicorn (>=23.0.0,<24.0.0)",
+    "drf-spectacular (>=0.28.0,<0.29.0)",
+    "djangorestframework (>=3.16.0,<4.0.0)",
+    "model-bakery (>=1.20.5,<2.0.0)",
+    "python-environ (>=0.4.54,<0.5.0)"
 ]
 
 [tool.poetry]
@@ -26,7 +33,7 @@ package-mode = false
 
 [tool.isort]
 profile = "black"
-line_length = 140
+line_length = 40
 py_version = 312
 order_by_type = false
 skip = [".gitignore", ".dockerignore"]
@@ -34,13 +41,13 @@ extend_skip = [".md", ".json"]
 skip_glob = ["docs/*"]
 
 [tool.flake8]
-max-line-length = 140
+max-line-length = 40
 select = ["C", "E", "F", "W", "B", "B9"]
 ignore = ["E203", "E501", "W503", "C812", "E731", "F811"]
 exclude = ["__init__.py"]
 
 [tool.black]
-line-length = 140
+line-length = 40
 target-version = ['py312']
 include = '\.pyi?$'
 
