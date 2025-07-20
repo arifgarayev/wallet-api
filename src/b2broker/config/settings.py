@@ -20,7 +20,10 @@ Env.read_env(
 
 SECRET_KEY = env("SECRET_KEY")
 
-DEBUG = env("DEBUG")
+DJANGO_IS_DEBUG = env.bool(
+    "DJANGO_IS_DEBUG"
+)
+DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
@@ -34,9 +37,9 @@ LANGUAGE_CODE = env("LANGUAGE_CODE")
 
 TIME_ZONE = env("TIMEZONE")
 
-USE_I18N = env("USE_I18N")
+USE_I18N = env.bool("USE_I18N")
 
-USE_TZ = env("USE_TZ")
+USE_TZ = env.bool("USE_TZ")
 
 STATIC_URL = env("STATIC_URL")
 
@@ -44,7 +47,11 @@ DEFAULT_AUTO_FIELD = env(
     "DEFAULT_AUTO_FIELD"
 )
 
-APPEND_SLASH = env("APPEND_SLASH")
+APPEND_SLASH = env.bool("APPEND_SLASH")
+
+CORS_ALLOW_ALL_ORIGINS = env.bool(
+    "CORS_ALLOW_ALL_ORIGINS"
+)
 
 # Hardcode
 INSTALLED_APPS = [
@@ -87,8 +94,27 @@ TEMPLATES = [
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "ATOMIC_REQUESTS": True,
+        "NAME": env("POSTGRES_DB"),
+        "USER": env("POSTGRES_USER"),
+        "PASSWORD": env(
+            "POSTGRES_PASSWORD"
+        ),
+        "HOST": (
+            env("POSTGRES_LOCAL_HOST")
+            if not os.path.exists(
+                "/.dockerenv"
+            )
+            else env(
+                "POSTGRES_CONTAINER_HOST"
+            )
+        ),
+        "PORT": env("POSTGRES_PORT"),
+        "OPTIONS": {
+            "default_transaction_isolation": "read committed",
+            "pool": True,
+        },
     }
 }
 
@@ -110,6 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 LOGGING = {
+    "version": 1,
     "formatters": {
         "standard": {
             "format": "[%(levelname)s] %(asctime)s %(name)s: %(message)s",
