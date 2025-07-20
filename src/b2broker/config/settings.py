@@ -54,7 +54,8 @@ CORS_ALLOW_ALL_ORIGINS = env.bool(
 )
 
 # Hardcode
-INSTALLED_APPS = [
+
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -62,6 +63,21 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+SIDE_APPS = [
+    "rest_framework",
+    "rest_framework_json_api",
+    "django_filters",
+    "drf_spectacular",
+]
+PROJECT_APPS = []
+
+
+INSTALLED_APPS = (
+    DJANGO_APPS
+    + SIDE_APPS
+    + PROJECT_APPS
+)
 
 STATICFILES_DIRS = [ROOT / "static"]
 
@@ -111,10 +127,10 @@ DATABASES = {
             )
         ),
         "PORT": env("POSTGRES_PORT"),
-        "OPTIONS": {
-            "default_transaction_isolation": "read committed",
-            "pool": True,
-        },
+        # "OPTIONS": {
+        #     "default_transaction_isolation": "read committed"
+        #     "pool": True,
+        # },
     }
 }
 
