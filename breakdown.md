@@ -22,3 +22,6 @@
    8. Read Transactions (by wallet id) - GET
    9. Update Transaction (by transaction ID) - PATCH
    10. Delete Transaction (by transaction ID) - DELETE
+
+4. TODO: Apply fixtures and mock data dump
+5. Do not forget about enumerators and __init__.py __all__ = []

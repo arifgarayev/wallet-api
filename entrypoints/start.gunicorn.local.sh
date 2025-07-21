@@ -5,6 +5,7 @@ set -o nounset
 
 echo "$PWD"
 
+export PYTHONFAULTHANDLER=1 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="src/b2broker/"
 
 source venv/bin/activate
