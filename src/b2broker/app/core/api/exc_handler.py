@@ -18,6 +18,7 @@ from rest_framework import (
 class ServiceExceptionHandlerMixin:
 
     expected_exceptions = {
+        AssertionError: rest_exceptions.ParseError,
         ValueError: rest_exceptions.ValidationError,
         ValidationError: rest_exceptions.ValidationError,
         PermissionError: rest_exceptions.PermissionDenied,

@@ -1,37 +1,27 @@
 import os
 from pathlib import Path
 from environ import Env
+import sys
 
-
-BASE_DIR = (
-    Path(__file__)
-    .resolve()
-    .parent.parent
-)
+BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT = BASE_DIR.parent.parent
 
 
 # from Environment
 env = Env(ALLOWED_HOSTS=(list, []))
-Env.read_env(
-    env_file=str(ROOT / ".env")
-)
+Env.read_env(env_file=str(ROOT / ".env"))
 
 
 SECRET_KEY = env("SECRET_KEY")
 
-DJANGO_IS_DEBUG = env.bool(
-    "DJANGO_IS_DEBUG"
-)
+DJANGO_IS_DEBUG = env.bool("DJANGO_IS_DEBUG")
 DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 ROOT_URLCONF = env("ROOT_URLCONF")
 
-WSGI_APPLICATION = env(
-    "WSGI_APPLICATION"
-)
+WSGI_APPLICATION = env("WSGI_APPLICATION")
 
 LANGUAGE_CODE = env("LANGUAGE_CODE")
 
@@ -43,15 +33,11 @@ USE_TZ = env.bool("USE_TZ")
 
 STATIC_URL = env("STATIC_URL")
 
-DEFAULT_AUTO_FIELD = env(
-    "DEFAULT_AUTO_FIELD"
-)
+DEFAULT_AUTO_FIELD = env("DEFAULT_AUTO_FIELD")
 
 APPEND_SLASH = env.bool("APPEND_SLASH")
 
-CORS_ALLOW_ALL_ORIGINS = env.bool(
-    "CORS_ALLOW_ALL_ORIGINS"
-)
+CORS_ALLOW_ALL_ORIGINS = env.bool("CORS_ALLOW_ALL_ORIGINS")
 
 # Hardcode
 
@@ -70,14 +56,10 @@ SIDE_APPS = [
     "django_filters",
     "drf_spectacular",
 ]
-PROJECT_APPS = ["app.core"]
+PROJECT_APPS = ["app.core.apps.CoreConfig"]
 
 
-INSTALLED_APPS = (
-    DJANGO_APPS
-    + SIDE_APPS
-    + PROJECT_APPS
-)
+INSTALLED_APPS = DJANGO_APPS + SIDE_APPS + PROJECT_APPS
 
 STATICFILES_DIRS = [ROOT / "static"]
 
@@ -114,17 +96,11 @@ DATABASES = {
         "ATOMIC_REQUESTS": True,
         "NAME": env("POSTGRES_DB"),
         "USER": env("POSTGRES_USER"),
-        "PASSWORD": env(
-            "POSTGRES_PASSWORD"
-        ),
+        "PASSWORD": env("POSTGRES_PASSWORD"),
         "HOST": (
             env("POSTGRES_LOCAL_HOST")
-            if not os.path.exists(
-                "/.dockerenv"
-            )
-            else env(
-                "POSTGRES_CONTAINER_HOST"
-            )
+            if not os.path.exists("/.dockerenv")
+            else env("POSTGRES_CONTAINER_HOST")
         ),
         "PORT": env("POSTGRES_PORT"),
         # "OPTIONS": {
@@ -175,6 +151,7 @@ REST_FRAMEWORK = {
         "rest_framework_json_api.renderers.JSONRenderer",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 
@@ -201,9 +178,7 @@ LOGGING = {
                 / env("LOG_ROOT_PATH")
                 / env("LOG_FILENAME")
             ),
-            "maxBytes": 25
-            * 1024
-            * 1024,
+            "maxBytes": 25 * 1024 * 1024,
             "backupCount": 10,
             "encoding": "utf8",
         },

@@ -21,7 +21,7 @@ class PointOfSale(Timestamped):
 
     wallet_id = models.ForeignKey(
         to="core.Wallet",
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         related_name="transactions",
         null=True,
         help_text="Foreign key to wallet",
