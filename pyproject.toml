@@ -30,7 +30,8 @@ dependencies = [
     "tox (>=4.27.0,<5.0.0)",
     "djangorestframework-jsonapi (>=7.1.0,<8.0.0)",
     "psycopg-binary (==3.2.9)",
-    "psycopg-pool (>=3.2.6,<4.0.0)"
+    "psycopg-pool (>=3.2.6,<4.0.0)",
+    "drf-spectacular-jsonapi (>=0.5.2,<0.6.0)"
 ]
 
 [tool.poetry]
@@ -39,7 +40,7 @@ package-mode = false
 
 [tool.isort]
 profile = "black"
-line_length = 40
+line_length = 60
 py_version = 312
 order_by_type = false
 skip = [".gitignore", ".dockerignore"]
@@ -47,13 +48,13 @@ extend_skip = [".md", ".json"]
 skip_glob = ["docs/*"]
 
 [tool.flake8]
-max-line-length = 40
+max-line-length = 60
 select = ["C", "E", "F", "W", "B", "B9"]
 ignore = ["E203", "E501", "W503", "C812", "E731", "F811"]
 exclude = ["__init__.py"]
 
 [tool.black]
-line-length = 40
+line-length = 60
 target-version = ['py312']
 include = '\.pyi?$'
 

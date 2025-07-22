@@ -16,24 +16,35 @@ from app.core.services import (
 from app.core.api.serializers import (
     WalletCreateInputSerializer,
     WalletCreateOutputSerializer,
+    WalletDetailInputSerializer,
+    WalletDetailOutputSerializer,
 )
 from drf_spectacular.utils import (
     extend_schema,
     OpenApiResponse,
 )
 from rest_framework import status
-
+from dataclasses import dataclass
 
 logger = logging.getLogger(__name__)
 
 
-class WalletCreateApi(
-    ServiceExceptionHandlerMixin,
-    APIView,
-):
-    """POST request for Wallet creation operation"""
-
+@dataclass
+class WalletApiMeta:
     OPENAPI_TAG = "Wallet"
+
+
+class WalletApiBase(ServiceExceptionHandlerMixin, APIView):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.wallet_service: WalletService = WalletService(
+            view=self
+        )
+
+
+class WalletCreateApi(WalletApiBase):
+    """POST request for Wallet creation operation"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,12 +55,12 @@ class WalletCreateApi(
             WalletCreateOutputSerializer
         )
 
-        self.wallet_service: WalletService = WalletService(
-            view=self
-        )
+    def get_serializer(self, *args, **kwargs):
+        return self.input_serializer
 
     @extend_schema(
-        tags=[OPENAPI_TAG],
+        tags=[WalletApiMeta.OPENAPI_TAG],
+        summary="Create Wallet resource",
         request=WalletCreateInputSerializer,
         responses=WalletCreateOutputSerializer,
     )
@@ -60,10 +71,30 @@ class WalletCreateApi(
         )
 
 
-class WalletDetailReadApi(
-    ServiceExceptionHandlerMixin,
-    APIView,
-): ...
+class WalletDetailReadApi(WalletApiBase):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input_serializer = WalletDetailInputSerializer
+        self.output_serializer = (
+            WalletDetailOutputSerializer
+        )
+
+    @extend_schema(
+        tags=[WalletApiMeta.OPENAPI_TAG],
+        summary="Get Wallet resource by ID",
+        request=WalletDetailInputSerializer,
+        responses=WalletDetailOutputSerializer,
+    )
+    def get(self, request, pk):
+        output = (
+            self.wallet_service.get_wallet_resource_details(
+                request, pk=pk
+            )
+        )
+        return Response(
+            output.data, status=status.HTTP_201_CREATED
+        )
 
 
 class WalletListReadApi(

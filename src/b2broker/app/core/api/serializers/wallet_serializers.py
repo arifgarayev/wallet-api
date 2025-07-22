@@ -19,6 +19,9 @@ class WalletCreateInputSerializer(serializers.Serializer):
         initial=0.0,
     )
 
+    class Meta:
+        resource_name = "WalletCreateApi"
+
 
 class WalletCreateOutputSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -28,3 +31,20 @@ class WalletCreateOutputSerializer(serializers.Serializer):
         decimal_places=MAX_PRECISION,
         initial=0.0,
     )
+
+    class Meta:
+        resource_name = "WalletCreateApi"
+
+
+class WalletDetailInputSerializer(serializers.Serializer):
+    pk = serializers.IntegerField(
+        required=True, min_value=1
+    )
+
+
+class WalletDetailOutputSerializer(
+    WalletCreateOutputSerializer
+):
+
+    class Meta:
+        resource_name = "WalletWalletDetailReadApi"

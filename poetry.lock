@@ -297,6 +297,23 @@ django-polymorphic = ["django-polymorphic (>=3.0)"]
 openapi = ["pyyaml (>=5.4)", "uritemplate (>=3.0.1)"]
 
 [[package]]
+name = "drf-extensions"
+version = "0.8.0"
+description = "Extensions for Django REST Framework"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "drf_extensions-0.8.0-py2.py3-none-any.whl", hash = "sha256:ab7bd854c9061c27ab55233b66d758001e5c2d81aaa9d117cbbe1c9ea49c77ab"},
+    {file = "drf_extensions-0.8.0.tar.gz", hash = "sha256:c3f27bca74a2def53e8454a5c7b327595195df51e121743120b2f51ef5a52aaa"},
+]
+
+[package.dependencies]
+Django = ">=2.2,<6.0"
+djangorestframework = ">=3.10.3"
+packaging = ">=24.1"
+
+[[package]]
 name = "drf-spectacular"
 version = "0.28.0"
 description = "Sane and flexible OpenAPI 3 schema generation for Django REST framework"
@@ -319,6 +336,25 @@ uritemplate = ">=2.0.0"
 [package.extras]
 offline = ["drf-spectacular-sidecar"]
 sidecar = ["drf-spectacular-sidecar"]
+
+[[package]]
+name = "drf-spectacular-jsonapi"
+version = "0.5.2"
+description = "open api 3 schema generator for drf-json-api package based on drf-spectacular package."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "drf-spectacular-jsonapi-0.5.2.tar.gz", hash = "sha256:d5bb8f05ea985ec3751d095c4ec677876d2832fa06dfd5ea58bb1e8897e5af47"},
+    {file = "drf_spectacular_jsonapi-0.5.2-py3-none-any.whl", hash = "sha256:d0351ced5e77df954c575010dcf79acc935cf37e45cae16e63151980b93cd806"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+djangorestframework = ">=3.13"
+djangorestframework-jsonapi = ">=6.0.0"
+drf-extensions = ">=0.7.1"
+drf-spectacular = ">=0.25.0"
 
 [[package]]
 name = "filelock"
@@ -1800,4 +1836,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "c9e16201c3c179679ccc2aca3195abefdc6a813b42c760a89283533a839d8049"
+content-hash = "38111476664c05e986b1412e2a3aa5c306262cc5a4d2cc25487269a753a53391"

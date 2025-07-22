@@ -18,9 +18,7 @@ APPLY_SEQUENCE_RAW_SQL_QUERY = """
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ("core", "0001_initial")
-    ]
+    dependencies = [("core", "0001_initial")]
 
     operations = [
         # create sequence
@@ -28,7 +26,5 @@ class Migration(migrations.Migration):
             sql=CREATE_SEQUENCE_RAW_SQL_QUERY
         ),
         # apply to column
-        migrations.RunSQL(
-            sql=APPLY_SEQUENCE_RAW_SQL_QUERY
-        ),
+        migrations.RunSQL(sql=APPLY_SEQUENCE_RAW_SQL_QUERY),
     ]

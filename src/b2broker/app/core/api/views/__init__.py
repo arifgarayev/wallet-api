@@ -1,3 +1,3 @@
-from .wallet_api import WalletCreateApi
+from .wallet_api import WalletCreateApi, WalletDetailReadApi
 
-__all__ = ["WalletCreateApi"]
+__all__ = ["WalletCreateApi", "WalletDetailReadApi"]
