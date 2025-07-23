@@ -8,6 +8,11 @@ from .wallet_serializers import (
     WalletUpdateInputSerializer,
 )
 
+from .transaction_serializers import (
+    TransactionGenericInputSerializer,
+    TransactionGenericOutputSerializer,
+)
+
 __all__ = [
     "WalletCreateOutputSerializer",
     "WalletCreateInputSerializer",
@@ -16,4 +21,6 @@ __all__ = [
     "BaseOutputSerializer",
     "WalletTransactionOutputSerializer",
     "WalletUpdateInputSerializer",
+    "TransactionGenericInputSerializer",
+    "TransactionGenericOutputSerializer",
 ]

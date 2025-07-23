@@ -34,3 +34,7 @@ class PointOfSale(Timestamped):
     amount = DecimalCustom(
         help_text="Transction amount could be negative and positive, should not exceed Wallet's total balance amount",
     )
+
+    def save(self, *args, **kwargs):
+        super().full_clean()
+        return super().save(*args, **kwargs)

@@ -25,3 +25,6 @@
 
 4. TODO: Apply fixtures and mock data dump
 5. Do not forget about enumerators and __init__.py __all__ = []
+
+6. Transaction output serializer
+   1. List of transactions with Wallet details in it

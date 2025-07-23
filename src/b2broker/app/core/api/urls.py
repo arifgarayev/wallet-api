@@ -4,10 +4,11 @@ from app.core.api.views import (
     WalletListReadApi,
     WalletListRelatedTransactionsApi,
     WalletUpdateApi,
+    BalanceTransactionTopUpApi,
 )
 from django.urls import path
 
-urlpatterns = [
+WALLET_URLs = [
     path("wallet/create", WalletCreateApi.as_view()),
     path("wallet/<int:pk>", WalletDetailReadApi.as_view()),
     path(
@@ -23,3 +24,13 @@ urlpatterns = [
         WalletUpdateApi.as_view(),
     ),
 ]
+
+
+POS_URLs = [
+    path(
+        "transaction/top-up",
+        BalanceTransactionTopUpApi.as_view(),
+    )
+]
+
+urlpatterns = WALLET_URLs + POS_URLs

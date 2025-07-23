@@ -13,6 +13,15 @@ from django.db.models.deletion import (
 from rest_framework import (
     exceptions as rest_exceptions,
 )
+from rest_framework import status
+
+
+class APIExceptionCode(rest_exceptions.APIException):
+
+    def __init__(self, status_code, *args, **kwargs):
+
+        self.status_code = status_code
+        super().__init__(*args, **kwargs)
 
 
 class ServiceExceptionHandlerMixin:
@@ -25,28 +34,28 @@ class ServiceExceptionHandlerMixin:
         PermissionDenied: rest_exceptions.PermissionDenied,
         IntegrityError: rest_exceptions.ValidationError,
         RestrictedError: rest_exceptions.ValidationError,
+        Exception: APIExceptionCode,
     }
 
     def handle_exception(self, exc):
         if isinstance(
             exc,
-            tuple(
-                self.expected_exceptions.keys()
-            ),
+            tuple(self.expected_exceptions.keys()),
         ):
-            drf_exception_class = self.expected_exceptions[
-                exc.__class__
-            ]
-            drf_exception = (
-                drf_exception_class(
-                    str(exc)
+            drf_exception_class = (
+                self.expected_exceptions.get(
+                    exc.__class__,
+                    APIExceptionCode,
                 )
             )
-
-            return super().handle_exception(
-                drf_exception
+            drf_exception = drf_exception_class(
+                detail=str(exc),
+                code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_400_BAD_REQUEST,
             )
+            print(drf_exception_class)
+            print("DRF_EXCEPTION: ", drf_exception)
 
-        return super().handle_exception(
-            exc
-        )
+            return super().handle_exception(drf_exception)
+
+        return super().handle_exception(exc)

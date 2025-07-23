@@ -11,16 +11,11 @@ from rest_framework.response import (
 from rest_framework.views import APIView
 import logging
 from app.core.services import (
-    WalletService,
     TransactionService,
 )
 from app.core.api.serializers import (
-    WalletCreateInputSerializer,
-    WalletCreateOutputSerializer,
-    WalletDetailInputSerializer,
-    WalletDetailOutputSerializer,
-    WalletTransactionOutputSerializer,
-    WalletUpdateInputSerializer,
+    TransactionGenericInputSerializer,
+    TransactionGenericOutputSerializer,
 )
 from drf_spectacular.utils import (
     extend_schema,
@@ -39,7 +34,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
-class WalletApiMeta:
+class POSApiMeta:
     OPENAPI_TAG = "Transaction"
 
 
@@ -49,17 +44,74 @@ class TransactionApiBase(
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.wallet_service: TransactionService = (
+        self.pos_service: TransactionService = (
             TransactionService(view=self)
         )
 
 
-class BalanceTransactionTopUpApi(TransactionApiBase): ...
+class BalanceTransactionTopUpApi(TransactionApiBase):
+
+    resource_name = "Transaction"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input_serializer_cls = (
+            TransactionGenericInputSerializer
+        )
+        self.output_serializer_cls = (
+            TransactionGenericOutputSerializer
+        )
+
+    @extend_schema(
+        tags=[POSApiMeta.OPENAPI_TAG],
+        summary="Top-up existing Wallet's Balance",
+        request=TransactionGenericInputSerializer,
+        responses=TransactionGenericOutputSerializer,
+    )
+    def post(self, request):
+        serialized_model = (
+            self.pos_service.balance_standalone_operation(
+                request=request
+            )
+        )
+
+        return Response(
+            serialized_model.data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
-class BalanceTransactionDeductApi(TransactionApiBase): ...
+class BalanceTransactionDeductApi(TransactionApiBase):
+    resource_name = "Transaction"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input_serializer_cls = (
+            TransactionGenericInputSerializer
+        )
+        self.output_serializer_cls = (
+            TransactionGenericOutputSerializer
+        )
+
+    @extend_schema(
+        tags=[POSApiMeta.OPENAPI_TAG],
+        summary="Deduct existing Wallet's Balance if Available",
+        request=TransactionGenericInputSerializer,
+        responses=TransactionGenericOutputSerializer,
+    )
+    def post(self, request):
+        serialized_model = (
+            self.pos_service.balance_standalone_operation(
+                request=request, is_deduction=True
+            )
+        )
+
+        return Response(
+            serialized_model.data,
+            status=status.HTTP_201_CREATED,
+        )
 
 
-class BalanceTransactionWalletToWalletApi(
+class BalanceTransactionWalletToWalletTransferApi(
     TransactionApiBase
 ): ...
