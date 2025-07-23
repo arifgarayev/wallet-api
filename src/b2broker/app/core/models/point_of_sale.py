@@ -14,12 +14,9 @@ from django.db.models.expressions import (
 class PointOfSale(Timestamped):
 
     # should not be pkey, so overwrite
-    id = models.PositiveIntegerField(
-        null=False,
-        unique=True,
-    )
+    id = None
 
-    wallet_id = models.ForeignKey(
+    wallet = models.ForeignKey(
         to="core.Wallet",
         on_delete=models.PROTECT,
         related_name="transactions",

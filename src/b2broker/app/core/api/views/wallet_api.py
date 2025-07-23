@@ -2,7 +2,7 @@
 API views for Wallet operations
 """
 
-from app.core.api.exc_handler import (
+from app.common import (
     ServiceExceptionHandlerMixin,
 )
 from rest_framework.response import (
@@ -18,13 +18,21 @@ from app.core.api.serializers import (
     WalletCreateOutputSerializer,
     WalletDetailInputSerializer,
     WalletDetailOutputSerializer,
+    WalletTransactionOutputSerializer,
+    WalletUpdateInputSerializer,
 )
 from drf_spectacular.utils import (
     extend_schema,
-    OpenApiResponse,
+    OpenApiParameter,
 )
-from rest_framework import status
+from rest_framework import status, mixins, viewsets
 from dataclasses import dataclass
+from rest_framework_json_api import filters, django_filters
+from rest_framework_json_api.pagination import (
+    JsonApiPageNumberPagination,
+)
+from rest_framework import filters as drf_filters
+
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +53,8 @@ class WalletApiBase(ServiceExceptionHandlerMixin, APIView):
 
 class WalletCreateApi(WalletApiBase):
     """POST request for Wallet creation operation"""
+
+    resource_name = "Wallet"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -72,6 +82,9 @@ class WalletCreateApi(WalletApiBase):
 
 
 class WalletDetailReadApi(WalletApiBase):
+    """GET request for single Wallet resource"""
+
+    resource_name = "Wallet"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,29 +100,144 @@ class WalletDetailReadApi(WalletApiBase):
         responses=WalletDetailOutputSerializer,
     )
     def get(self, request, pk):
+        print("PK= ", pk)
         output = (
             self.wallet_service.get_wallet_resource_details(
                 request, pk=pk
             )
         )
         return Response(
-            output.data, status=status.HTTP_201_CREATED
+            output.data, status=status.HTTP_200_OK
         )
 
 
-class WalletListReadApi(
-    ServiceExceptionHandlerMixin,
-    APIView,
-): ...
+class WalletListReadApi(WalletApiBase):
+    """GET request for list of Wallets with filtering"""
+
+    resource_name = "Wallet"
+    paginator = JsonApiPageNumberPagination
+
+    filter_backends = [
+        filters.QueryParameterValidationFilter,
+        filters.OrderingFilter,
+        django_filters.DjangoFilterBackend,
+        drf_filters.SearchFilter,
+    ]
+    ordering_fields = [
+        "id",
+        "balance",
+        "created_at",
+        "updated_at",
+    ]
+    ordering = ["id"]
+
+    filterset_fields = {
+        "id": ("exact", "in"),
+        "label": (
+            "exact",
+            "icontains",
+            "iexact",
+            "contains",
+        ),
+        "balance": (
+            "exact",
+            "lt",
+            "gt",
+            "gte",
+            "lte",
+        ),
+    }
+
+    search_fields = (
+        "id",
+        "label",
+        "balance",
+    )
+
+    def filter_queryset(self, queryset):
+        for filter in self.filter_backends:
+            queryset = filter().filter_queryset(
+                self.request, queryset, self
+            )
+
+        return queryset
+
+    def get_queryset(self):
+        return (
+            self.wallet_service.WALLET_MODEL.objects.all()
+        )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.output_serializer: type = (
+            WalletDetailOutputSerializer
+        )
+
+    @extend_schema(
+        tags=[WalletApiMeta.OPENAPI_TAG],
+        summary="Get list of Wallet resources",
+        responses=WalletDetailOutputSerializer,
+    )
+    def get(self, request):
+        output = self.wallet_service.get_list(request)
+
+        return output
 
 
-class WalletUpdateApi(
-    ServiceExceptionHandlerMixin,
-    APIView,
-): ...
+class WalletListRelatedTransactionsApi(WalletApiBase):
+    """GET list of Related Transactions for a single Wallet"""
+
+    resource_name = "Wallet"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input_serializer = WalletDetailInputSerializer
+        self.output_serializer = (
+            WalletTransactionOutputSerializer
+        )
+
+    @extend_schema(
+        tags=[WalletApiMeta.OPENAPI_TAG],
+        summary="Get list of Transactions of a Wallet by ID",
+        request=WalletDetailInputSerializer,
+        responses=WalletTransactionOutputSerializer,
+    )
+    def get(self, request, pk):
+        output = self.wallet_service.get_and_relate(
+            request, pk=pk
+        )
+
+        return Response(
+            output.data, status=status.HTTP_200_OK
+        )
 
 
-class WalletDeleteApi(
-    ServiceExceptionHandlerMixin,
-    APIView,
-): ...
+class WalletUpdateApi(WalletApiBase):
+    """PATCH for Wallet label update"""
+
+    resource_name = "Wallet"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.input_serializer = WalletUpdateInputSerializer
+        self.output_serializer = (
+            WalletTransactionOutputSerializer
+        )
+        self.payload_serializer = (
+            WalletUpdateInputSerializer
+        )
+
+    @extend_schema(
+        tags=[WalletApiMeta.OPENAPI_TAG],
+        summary="Update Wallet label by ID",
+        request=WalletUpdateInputSerializer,
+        responses=WalletDetailOutputSerializer,
+    )
+    def patch(self, request, pk):
+        output = self.wallet_service.get_and_update(
+            request, pk=pk
+        )
+
+        return Response(
+            output.data, status=status.HTTP_200_OK
+        )

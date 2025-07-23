@@ -1,3 +1,15 @@
-from .wallet_api import WalletCreateApi, WalletDetailReadApi
+from .wallet_api import (
+    WalletCreateApi,
+    WalletDetailReadApi,
+    WalletListReadApi,
+    WalletListRelatedTransactionsApi,
+    WalletUpdateApi,
+)
 
-__all__ = ["WalletCreateApi", "WalletDetailReadApi"]
+__all__ = [
+    "WalletUpdateApi",
+    "WalletCreateApi",
+    "WalletDetailReadApi",
+    "WalletListReadApi",
+    "WalletListRelatedTransactionsApi",
+]

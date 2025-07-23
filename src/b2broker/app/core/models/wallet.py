@@ -22,7 +22,7 @@ class Wallet(Timestamped):
 
     def save(self, *args, **kwargs):
         super().full_clean()
-        return super().save()
+        return super().save(*args, **kwargs)
 
     class Meta:
         # add unsigned in DB level

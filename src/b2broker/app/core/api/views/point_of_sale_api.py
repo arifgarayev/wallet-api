@@ -2,7 +2,7 @@
 API views for Transaction Events
 """
 
-from app.core.api.exc_handler import (
+from app.common import (
     ServiceExceptionHandlerMixin,
 )
 from rest_framework.response import (
