@@ -6,6 +6,7 @@ from app.core.api.views import (
     WalletUpdateApi,
     BalanceTransactionTopUpApi,
     BalanceTransactionDeductApi,
+    BalanceTransactionWalletToWalletTransferApi,
 )
 from django.urls import path
 
@@ -35,6 +36,10 @@ POS_URLs = [
     path(
         "transaction/deduct",
         BalanceTransactionDeductApi.as_view(),
+    ),
+    path(
+        "transaction/move-funds",
+        BalanceTransactionWalletToWalletTransferApi.as_view(),
     ),
 ]
 

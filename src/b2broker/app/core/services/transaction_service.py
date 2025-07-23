@@ -20,6 +20,46 @@ class TransactionService:
         self.view = view
 
     @transaction.atomic
+    def wallet_to_wallet_transfer(self, request):
+        serialized_data = self.view.input_serializer_cls(
+            data=request.data
+        )
+
+        serialized_data.is_valid(raise_exception=True)
+
+        locked_origin_wallet = self.RELATED_WALLET_MODEL_CLS.objects.select_for_update().get(
+            id=serialized_data.validated_data.get(
+                "origin_wallet_id", 0
+            )
+        )
+
+        locker_destination_wallet = self.RELATED_WALLET_MODEL_CLS.objects.select_for_update().get(
+            id=serialized_data.validated_data.get(
+                "destination_wallet_id", 0
+            )
+        )
+
+        if (
+            locked_origin_wallet
+            == locker_destination_wallet
+        ):
+            raise ValueError(
+                "Origin and Destination should be distinct Wallets"
+            )
+
+        transactions: list = self._mutate_balance(
+            origin_wallet=locked_origin_wallet,
+            amount=serialized_data.validated_data.get(
+                "amount", 0
+            ),
+            destination_wallet=locker_destination_wallet,
+        )
+
+        return self._prepare_response(
+            model=transactions, is_many=True
+        )
+
+    @transaction.atomic
     def balance_standalone_operation(
         self, request, is_deduction=False
     ):
@@ -89,7 +129,26 @@ class TransactionService:
 
         # should be valid both origin and destination arguments
         # should be checked against validity of the balance
-        return
+        deducted_wallet = self._value_deduct(
+            wallet_model=origin_wallet,
+            amount=amount,
+        )
+        deducted_transaction_model = self._init_transaction(
+            wallet_model_to_relate=deducted_wallet,
+            amount=amount,
+            is_deduction=True,
+        )
+        toptup_wallet = self._arithmetic_operation(
+            wallet_model=destination_wallet, amount=amount
+        )
+        top_up_transaction_model = self._init_transaction(
+            wallet_model_to_relate=toptup_wallet,
+            amount=amount,
+        )
+        return [
+            deducted_transaction_model,
+            top_up_transaction_model,
+        ]
 
     def _arithmetic_operation(self, wallet_model, amount):
 

@@ -48,13 +48,18 @@ class ServiceExceptionHandlerMixin:
                     APIExceptionCode,
                 )
             )
-            drf_exception = drf_exception_class(
-                detail=str(exc),
-                code=status.HTTP_400_BAD_REQUEST,
-                status_code=status.HTTP_400_BAD_REQUEST,
+            drf_exception = (
+                drf_exception_class(
+                    detail=str(exc),
+                    code=status.HTTP_400_BAD_REQUEST,
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                )
+                if drf_exception_class == APIExceptionCode
+                else drf_exception_class(
+                    detail=str(exc),
+                    code=status.HTTP_400_BAD_REQUEST,
+                )
             )
-            print(drf_exception_class)
-            print("DRF_EXCEPTION: ", drf_exception)
 
             return super().handle_exception(drf_exception)
 

@@ -49,8 +49,7 @@ class TransactionApiBase(
         )
 
 
-class BalanceTransactionTopUpApi(TransactionApiBase):
-
+class BalanceTransactionGenericApi(TransactionApiBase):
     resource_name = "Transaction"
 
     def __init__(self, *args, **kwargs):
@@ -61,6 +60,14 @@ class BalanceTransactionTopUpApi(TransactionApiBase):
         self.output_serializer_cls = (
             TransactionGenericOutputSerializer
         )
+
+    def post(self, request):
+        raise NotImplementedError
+
+
+class BalanceTransactionTopUpApi(
+    BalanceTransactionGenericApi
+):
 
     @extend_schema(
         tags=[POSApiMeta.OPENAPI_TAG],
@@ -81,17 +88,9 @@ class BalanceTransactionTopUpApi(TransactionApiBase):
         )
 
 
-class BalanceTransactionDeductApi(TransactionApiBase):
-    resource_name = "Transaction"
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.input_serializer_cls = (
-            TransactionGenericInputSerializer
-        )
-        self.output_serializer_cls = (
-            TransactionGenericOutputSerializer
-        )
+class BalanceTransactionDeductApi(
+    BalanceTransactionGenericApi
+):
 
     @extend_schema(
         tags=[POSApiMeta.OPENAPI_TAG],
@@ -113,5 +112,22 @@ class BalanceTransactionDeductApi(TransactionApiBase):
 
 
 class BalanceTransactionWalletToWalletTransferApi(
-    TransactionApiBase
-): ...
+    BalanceTransactionGenericApi
+):
+
+    @extend_schema(
+        tags=[POSApiMeta.OPENAPI_TAG],
+        summary="Wallet to Wallet fund movements",
+        request=TransactionGenericInputSerializer,
+        responses=TransactionGenericOutputSerializer,
+    )
+    def post(self, request):
+        serialized_transactions = (
+            self.pos_service.wallet_to_wallet_transfer(
+                request
+            )
+        )
+        return Response(
+            serialized_transactions.data,
+            status=status.HTTP_201_CREATED,
+        )

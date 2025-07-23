@@ -6,6 +6,7 @@ from app.core.misc import (
 from app.core.api.serializers import (
     WalletCreateOutputSerializer,
 )
+from decimal import Decimal
 
 
 class TransactionGenericInputSerializer(
@@ -26,7 +27,7 @@ class TransactionGenericInputSerializer(
     amount = serializers.DecimalField(
         required=True,
         allow_null=False,
-        min_value=0.0,
+        min_value=Decimal(0.0),
         max_digits=MAX_DIGITS,
         decimal_places=MAX_PRECISION,
     )
@@ -49,6 +50,16 @@ class TransactionGenericInputSerializer(
             else None
         )
 
+    def validate(self, values):
+        if values.get("origin_wallet_id", 0) == values.get(
+            "destination_wallet_id", 0
+        ):
+            raise ValueError(
+                "Origin and Destination should be distinct values"
+            )
+
+        return values
+
     class Meta:
         resource_name = "Transaction"
 
@@ -64,6 +75,7 @@ class TransactionGenericOutputSerializer(
     wallet = WalletCreateOutputSerializer()
 
     def to_representation(self, instance):
+
         return super().to_representation(instance)
 
     class Meta:
