@@ -100,7 +100,7 @@ class WalletDetailReadApi(WalletApiBase):
         responses=WalletDetailOutputSerializer,
     )
     def get(self, request, pk):
-        print("PK= ", pk)
+
         output = (
             self.wallet_service.get_wallet_resource_details(
                 request, pk=pk
@@ -219,7 +219,7 @@ class WalletUpdateApi(WalletApiBase):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.input_serializer = WalletUpdateInputSerializer
+        self.input_serializer = WalletDetailInputSerializer
         self.output_serializer = (
             WalletTransactionOutputSerializer
         )
@@ -237,7 +237,6 @@ class WalletUpdateApi(WalletApiBase):
         output = self.wallet_service.get_and_update(
             request, pk=pk
         )
-
         return Response(
             output.data, status=status.HTTP_200_OK
         )

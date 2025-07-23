@@ -57,7 +57,7 @@ class WalletService:
             transaction_model = self._create(
                 self.BACK_REF_RELATED_MODEL,
                 validated_data={
-                    "wallet_id": wallet_model,
+                    "wallet_id": wallet_model.id,
                     "amount": balance,
                 },
             )
@@ -104,20 +104,18 @@ class WalletService:
     @transaction.atomic
     def get_and_update(self, request, **kwargs):
         wallet_model = self._validate_and_get(**kwargs)
-        serializer = self.view.payload_serializer(
+        validated_data = self.view.payload_serializer(
             data=request.data
         )
 
-        validated_data = serializer.is_valid(
-            raise_exception=True
-        )
+        validated_data.is_valid(raise_exception=True)
 
         instance, _ = CommonUtils.model_update(
             instance=wallet_model,
-            fields=list(
-                self.view.input_serializer.fields.keys()
-            ),
-            data=validated_data,
+            fields=[
+                "label",
+            ],
+            data=validated_data.data,
         )
 
         return self._prepare_response(model=instance)
