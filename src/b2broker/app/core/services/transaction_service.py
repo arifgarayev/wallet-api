@@ -67,18 +67,22 @@ class TransactionService:
             # only top up origin wallet
             # meaning no balance movements
 
-            transaction_model = self._init_transaction(
-                wallet_model_to_relate=origin_wallet,
-                amount=amount,
-            )
-
             updated_wallet = (
                 self._arithmetic_operation(
                     wallet_model=origin_wallet,
                     amount=amount,
                 )
                 if not is_deduction
-                else self._value_deduct(...)
+                else self._value_deduct(
+                    wallet_model=origin_wallet,
+                    amount=amount,
+                )
+            )
+
+            transaction_model = self._init_transaction(
+                wallet_model_to_relate=origin_wallet,
+                amount=amount,
+                is_deduction=is_deduction,
             )
 
             return transaction_model
@@ -107,13 +111,12 @@ class TransactionService:
     ):
         prep_kwargs = {
             "wallet": wallet_model_to_relate,
-            "amount": amount,
+            "amount": (
+                amount
+                if not is_deduction
+                else self._negatiate_amount(amount)
+            ),
         }
-
-        if is_deduction:
-            # logic for deduction
-            # no need to return, just negatiate prep_kwargs key amount
-            return
 
         transaction_model = self._create(
             model_class=self.POINT_OF_SALE_MODEL_CLS,
@@ -122,22 +125,31 @@ class TransactionService:
 
         return transaction_model
 
+    def _negatiate_amount(self, amount):
+
+        return -1 * amount
+
     def _value_deduct(self, wallet_model, amount):
         is_valid = self._is_valid_for_deduction(
-            wallet_model=wallet_model, amount=amount
+            wallet_model=wallet_model,
+            desired_amount_to_deduct=amount,
         )
 
         if not is_valid:
             raise InsufficientFundsException(
                 f"Insufficient funds in the balance. Please Deduct valid amount no greater than {wallet_model.balance}"
             )
-        negatiate_amount = -1 * amount
+        negatiate_amount = self._negatiate_amount(
+            amount=amount
+        )
 
         # TODO: continue from here later
-        self._arithmetic_operation(
+        updated_wallet = self._arithmetic_operation(
             wallet_model=wallet_model,
             amount=negatiate_amount,
         )
+
+        return updated_wallet
 
     def _is_valid_for_deduction(
         self, wallet_model, desired_amount_to_deduct

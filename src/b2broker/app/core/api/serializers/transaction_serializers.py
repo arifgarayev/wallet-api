@@ -63,5 +63,8 @@ class TransactionGenericOutputSerializer(
     )
     wallet = WalletCreateOutputSerializer()
 
+    def to_representation(self, instance):
+        return super().to_representation(instance)
+
     class Meta:
         resource_name = "Transaction"
