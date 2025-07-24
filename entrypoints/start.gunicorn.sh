@@ -7,16 +7,15 @@ echo "$PWD"
 
 export PYTHONPATH="src/b2broker/"
 
-python manage.py makemigrations
+python src/b2broker/manage.py makemigrations
 
-python manage.py migrate
+python src/b2broker/manage.py migrate
 
-python manage.py collectstatic --noinput
+python src/b2broker/manage.py collectstatic --noinput
 
 gunicorn \
     --bind 0.0.0.0:8000 config.wsgi \
     --capture-output \
-    --worker-class gevent \
     --max-requests $GUNICORN_MAX_REQUESTS \
     --max-requests-jitter $GUNICORN_MAX_REQUESTS_JITTER \
     --workers $GUNICORN_WORKERS \

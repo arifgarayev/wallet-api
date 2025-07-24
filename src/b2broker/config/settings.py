@@ -32,6 +32,7 @@ USE_I18N = env.bool("USE_I18N")
 USE_TZ = env.bool("USE_TZ")
 
 STATIC_URL = env("STATIC_URL")
+STATIC_ROOT = env("STATIC_ROOT")
 
 DEFAULT_AUTO_FIELD = env("DEFAULT_AUTO_FIELD")
 
@@ -61,7 +62,7 @@ PROJECT_APPS = ["app.core.apps.CoreConfig"]
 
 INSTALLED_APPS = DJANGO_APPS + SIDE_APPS + PROJECT_APPS
 
-STATICFILES_DIRS = [ROOT / "static"]
+STATICFILES_DIRS = [ROOT / "static/assets"]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

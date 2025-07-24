@@ -1,4 +1,23 @@
 services:
+  service:
+    image: core-service
+    container_name: core-service
+    restart: always
+    build:
+      context: .
+      dockerfile: ./ci/api.Dockerfile
+    volumes:
+      - .:/b2broker-task
+      - ./logs:/b2broker-task/logs
+    env_file:
+      - .env
+    entrypoint:
+      - /entrypoints/start.gunicorn.sh
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+
 
   postgres:
     image: postgres
