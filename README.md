@@ -28,13 +28,9 @@ A simple, extensible Django-based web API application for managing wallets, depo
    ```bash
    git clone https://github.com/arifgarayev/b2broker-task
    cd b2broker-task
-
-
 2. **Build Images & Run Containers**  
     ```
     make run-build
-
-
 3. **API Schema & Doc**
  - **Navigate** to ```127.0.0.1:8000``` for **Swagger UI** definitions
 
