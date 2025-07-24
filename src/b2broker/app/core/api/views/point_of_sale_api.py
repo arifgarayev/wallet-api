@@ -2,33 +2,19 @@
 API views for Transaction Events
 """
 
-from app.common import (
-    ServiceExceptionHandlerMixin,
-)
-from rest_framework.response import (
-    Response,
-)
-from rest_framework.views import APIView
 import logging
-from app.core.services import (
-    TransactionService,
-)
+from dataclasses import dataclass
+
+from app.common import ServiceExceptionHandlerMixin
 from app.core.api.serializers import (
     TransactionGenericInputSerializer,
     TransactionGenericOutputSerializer,
 )
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter,
-)
-from rest_framework import status, mixins, viewsets
-from dataclasses import dataclass
-from rest_framework_json_api import filters, django_filters
-from rest_framework_json_api.pagination import (
-    JsonApiPageNumberPagination,
-)
-from rest_framework import filters as drf_filters
-
+from app.core.services import TransactionService
+from drf_spectacular.utils import extend_schema
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 logger = logging.getLogger(__name__)
 

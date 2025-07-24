@@ -2,17 +2,12 @@
 API views for Wallet operations
 """
 
-from app.common import (
-    ServiceExceptionHandlerMixin,
-)
-from rest_framework.response import (
-    Response,
-)
-from rest_framework.views import APIView
+from __future__ import annotations
+
 import logging
-from app.core.services import (
-    WalletService,
-)
+from dataclasses import dataclass
+
+from app.common import ServiceExceptionHandlerMixin
 from app.core.api.serializers import (
     WalletCreateInputSerializer,
     WalletCreateOutputSerializer,
@@ -21,18 +16,16 @@ from app.core.api.serializers import (
     WalletTransactionOutputSerializer,
     WalletUpdateInputSerializer,
 )
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter,
-)
-from rest_framework import status, mixins, viewsets
-from dataclasses import dataclass
-from rest_framework_json_api import filters, django_filters
+from app.core.services import WalletService
+from drf_spectacular.utils import extend_schema
+from rest_framework import filters as drf_filters
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_json_api import django_filters, filters
 from rest_framework_json_api.pagination import (
     JsonApiPageNumberPagination,
 )
-from rest_framework import filters as drf_filters
-
 
 logger = logging.getLogger(__name__)
 

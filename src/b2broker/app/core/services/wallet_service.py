@@ -1,16 +1,18 @@
-from app.core.models import Wallet, PointOfSale
-from rest_framework.views import APIView
-from django.http import HttpRequest
-from rest_framework import serializers
-from typing import Dict
+from __future__ import annotations
+
+from logging import getLogger
+from typing import Dict, TYPE_CHECKING
+
+from app.common import CommonUtils
+from app.core.models import PointOfSale, Wallet
 from django.db import transaction
 from django.shortcuts import get_object_or_404
-from app.core.api.views import wallet_api
-from logging import getLogger
-from rest_framework.response import (
-    Response,
-)
-from app.common import CommonUtils
+from rest_framework import serializers
+from rest_framework.response import Response
+
+if TYPE_CHECKING:
+    from app.core.api.views import wallet_api
+
 
 logger = getLogger(__name__)
 

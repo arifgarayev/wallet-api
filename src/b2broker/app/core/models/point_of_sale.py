@@ -1,14 +1,6 @@
-from app.core.models.base import (
-    Timestamped,
-    DecimalCustom,
-)
+from app.core.models.base import DecimalCustom, Timestamped
+from django.contrib.postgres.functions import RandomUUID
 from django.db import models
-from django.contrib.postgres.functions import (
-    RandomUUID,
-)
-from django.db.models.expressions import (
-    RawSQL,
-)
 
 
 class PointOfSale(Timestamped):

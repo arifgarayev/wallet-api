@@ -7,12 +7,8 @@ from django.core.exceptions import (
     ValidationError,
 )
 from django.db import IntegrityError
-from django.db.models.deletion import (
-    RestrictedError,
-)
-from rest_framework import (
-    exceptions as rest_exceptions,
-)
+from django.db.models.deletion import RestrictedError
+from rest_framework import exceptions as rest_exceptions
 from rest_framework import status
 
 

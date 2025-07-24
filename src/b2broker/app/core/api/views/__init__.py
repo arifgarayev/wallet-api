@@ -1,15 +1,14 @@
+from .point_of_sale_api import (
+    BalanceTransactionDeductApi,
+    BalanceTransactionTopUpApi,
+    BalanceTransactionWalletToWalletTransferApi,
+)
 from .wallet_api import (
     WalletCreateApi,
     WalletDetailReadApi,
     WalletListReadApi,
     WalletListRelatedTransactionsApi,
     WalletUpdateApi,
-)
-
-from .point_of_sale_api import (
-    BalanceTransactionTopUpApi,
-    BalanceTransactionDeductApi,
-    BalanceTransactionWalletToWalletTransferApi,
 )
 
 __all__ = [

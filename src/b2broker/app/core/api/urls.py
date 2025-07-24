@@ -1,12 +1,12 @@
 from app.core.api.views import (
+    BalanceTransactionDeductApi,
+    BalanceTransactionTopUpApi,
+    BalanceTransactionWalletToWalletTransferApi,
     WalletCreateApi,
     WalletDetailReadApi,
     WalletListReadApi,
     WalletListRelatedTransactionsApi,
     WalletUpdateApi,
-    BalanceTransactionTopUpApi,
-    BalanceTransactionDeductApi,
-    BalanceTransactionWalletToWalletTransferApi,
 )
 from django.urls import path
 

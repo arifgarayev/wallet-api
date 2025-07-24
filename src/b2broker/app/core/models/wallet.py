@@ -1,7 +1,4 @@
-from app.core.models.base import (
-    Timestamped,
-    DecimalCustom,
-)
+from app.core.models.base import DecimalCustom, Timestamped
 from django.db import models
 
 

@@ -2,12 +2,11 @@ from .base import BaseOutputSerializer
 from .wallet_serializers import (
     WalletCreateInputSerializer,
     WalletCreateOutputSerializer,
-    WalletDetailOutputSerializer,
     WalletDetailInputSerializer,
+    WalletDetailOutputSerializer,
     WalletTransactionOutputSerializer,
     WalletUpdateInputSerializer,
 )
-
 from .transaction_serializers import (
     TransactionGenericInputSerializer,
     TransactionGenericOutputSerializer,

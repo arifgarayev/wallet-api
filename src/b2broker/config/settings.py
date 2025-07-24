@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
+
 from environ import Env
-import sys
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT = BASE_DIR.parent.parent

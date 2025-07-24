@@ -1,8 +1,4 @@
-from django.db import migrations
-from app.core.misc import (
-    MAX_DIGITS,
-    MAX_PRECISION,
-)
+from app.core.misc import MAX_DIGITS, MAX_PRECISION
 from django.db import models
 
 

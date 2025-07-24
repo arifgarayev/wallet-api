@@ -1,12 +1,11 @@
-from app.core.models import Wallet, PointOfSale
-from django.shortcuts import get_object_or_404
 from logging import getLogger
+
 from app.common import (
     CommonUtils,
     InsufficientFundsException,
 )
+from app.core.models import PointOfSale, Wallet
 from django.db import transaction
-from decimal import Decimal
 
 logger = getLogger(__name__)
 

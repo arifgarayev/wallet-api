@@ -1,12 +1,10 @@
-from rest_framework import serializers
-from app.core.misc import (
-    MAX_DIGITS,
-    MAX_PRECISION,
-)
+from decimal import Decimal
+
 from app.core.api.serializers import (
     WalletCreateOutputSerializer,
 )
-from decimal import Decimal
+from app.core.misc import MAX_DIGITS, MAX_PRECISION
+from rest_framework import serializers
 
 
 class TransactionGenericInputSerializer(
