@@ -1,4 +1,4 @@
-# Django B2BROKER API
+# Django WALLET API
 
 [![Python Version](https://img.shields.io/badge/python-3.13%2B-blue)](https://www.python.org/)  
 [![Django Version](https://img.shields.io/badge/django-5.1%2B-green)](https://www.djangoproject.com/)  
